@@ -3,6 +3,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+/*
+ * You can only open with "r" or "w"
+ * */
+
 int main() {
 	char s[1024];
 	FILE *stream = popen("ls", "r");
