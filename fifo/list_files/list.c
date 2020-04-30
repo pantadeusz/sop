@@ -10,15 +10,10 @@ int main (int argc, char **argv) {
         return -1;
     }
     dp = opendir (argv[1]);
-
-    if (dp != NULL)
-    {
-        while (ep = readdir (dp))
-            puts (ep->d_name);
-
-        (void) closedir (dp);
-    }
-    else {
+    if (dp != NULL) {
+        while (ep = readdir (dp)) puts (ep->d_name);
+        closedir (dp);
+    } else {
         perror ("Couldn't open the directory");
     }
     return 0;
