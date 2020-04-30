@@ -3,20 +3,33 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+int suma(int a, int b) {
+	int s = 0;
+	for (int i = 0; i < b; i++) s += i;
+	return s;
+}
+
 int main() {
 	
-	int fd[2];
+	int fd[2]; // 1 - do zapisu, 0 - do odczytu
 	pipe(fd);
+	
 	if (fork()) {
-		char data[20]="Witaj p	";
-		write(fd[1],data,10);
-		close(fd[1]); // zamykamy do zapisu
-		wait(NULL);
-	} else {
-		char data[20];
-		read(fd[0],data,10);
-		printf("%d: %s\n", getpid(),data);
+		int partsum = suma(0,100);
+		printf("rodzic - suma: %d\n", partsum);
+		int part2sum;
+		read(fd[0],&part2sum,sizeof(part2sum));
 		close(fd[0]); // zamykamy do odczytu
+		int pidenidng, status;
+		pidenidng = wait(&status);
+		printf("rodzic dla (%d -> %x)- suma całości: %d\n",pidenidng,status, partsum+part2sum);
+	} else {
+		
+		int partsum = suma(100,200);
+		printf("dziecko(%d) - suma: %d\n", getpid(), partsum);
+		write(fd[1],&partsum,sizeof(partsum));
+		close(fd[1]); // zamykamy do zapisu
+		return 0x0ab;
 	}
 	
 	return 0;
