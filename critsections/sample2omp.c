@@ -22,67 +22,67 @@ int numer = 0;
 
 int producer() {
     int i = 0, j = 1;
-	int x = 0;
-	while(1) {
-	  x++; // produkujemy nowa wartosc
-	  while (licznik == ROZMIAR_BUFORA) ;
-	  bufor[we] = x; // wysylamy do bufora
-	  we = (we + 1) % ROZMIAR_BUFORA;
-	  
-	  // sekcja wejsciowa
+    int x = 0;
+    while(1) {
+        x++; // produkujemy nowa wartosc
+        while (licznik == ROZMIAR_BUFORA) ;
+        bufor[we] = x; // wysylamy do bufora
+        we = (we + 1) % ROZMIAR_BUFORA;
+
+        // sekcja wejsciowa
 //	  znacznik[i] = 1;
 //	  #pragma omp critical // to jest male oszustwo -- aby to zadzialalo, musimy miec operacje atomowa
 //  	  numer = j;
 //	  while((znacznik[j]==1) && (numer == j)) ;
-	  
-	  // sekcja krytyczna
-	  
-	  licznik = licznik + 1;
 
-	  // sekcja wyjściowa
+        // sekcja krytyczna
+
+        licznik = licznik + 1;
+
+        // sekcja wyjściowa
 //	  znacznik[i] = 0;
 
-	  if (x == 11000) break;
-	}
+        if (x == 11000) break;
+    }
 }
 
 int consumer() {
-	int i = 1, j = 0;
-	int v;
-	while(1) {
-	  while(licznik == 0) ;
-	  v = bufor[wy];
-	  wy = (wy + 1) % ROZMIAR_BUFORA;
-	  
-	  
-	  // sekcja wejsciowa
-	  znacznik[i] = 1;
-	  #pragma omp critical
-	  numer = j;
-	  while((znacznik[j] == 1) && (numer == j)) ;
-     
-	  // sekcja krytyczna
-	  licznik = licznik - 1;
+    int i = 1, j = 0;
+    int v;
+    while(1) {
+        while(licznik == 0) ;
+        v = bufor[wy];
+        wy = (wy + 1) % ROZMIAR_BUFORA;
 
-	  // sekcja wyjściowa
-	  znacznik[i] = 0;
 
-	  printf("%d\n",v);
-	  if (v == 11000) break;
-	}
-	
+        // sekcja wejsciowa
+        znacznik[i] = 1;
+        #pragma omp critical
+        numer = j;
+        while((znacznik[j] == 1) && (numer == j)) ;
+
+        // sekcja krytyczna
+        licznik = licznik - 1;
+
+        // sekcja wyjściowa
+        znacznik[i] = 0;
+
+        printf("%d\n",v);
+        if (v == 11000) break;
+    }
+
 }
 
 int main() {
 
-	#pragma omp parallel num_threads(2) shared(licznik,we,wy,bufor)
-		{
-			int i = omp_get_thread_num();
-			if (i == 0){
-				consumer();
-			} else if (i == 1) {
-				producer();
-			}
-		}
-	return 0;
+    #pragma omp parallel num_threads(2) shared(licznik,we,wy,bufor)
+    {
+        int i = omp_get_thread_num();
+        if (i == 0) {
+            consumer();
+        } else if (i == 1) {
+            producer();
+        }
+    }
+    return 0;
 }
