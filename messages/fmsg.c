@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     int pid = fork();
     if (pid == 0) {
         msgbuf bufor;
-        bufor.mtext[0] = 'Y';
+        bufor.mtext[0] = '7';
         bufor.mtype = 1;
         int ret = msgsnd(kolejka, &bufor, 1, 0);
         switch(errno) {
