@@ -1,15 +1,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <errno.h>
 #include <string.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
-
-
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
+       
 #define ROZMIAR_BUFORA 128
 #define EXPERIMENT_TESTS 11000
 typedef struct {
@@ -87,7 +88,7 @@ int main(int argc, char **argv) {
 
     if (fork()) { // rodzic
         producer(b,semid);
-        wait();
+        wait(NULL);
     } else {
         consumer(b,semid);
         exit(0);

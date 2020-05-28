@@ -23,7 +23,7 @@ int producer() {
         while (licznik == ROZMIAR_BUFORA) ;
         bufor[we] = x; // wysylamy do bufora
         we = (we + 1) % ROZMIAR_BUFORA;
-        //#pragma omp atomic
+        #pragma omp atomic
         licznik = licznik + 1;
 
         if (x == 11000) break;
@@ -37,7 +37,7 @@ int consumer() {
         v = bufor[wy];
         wy = (wy + 1) % ROZMIAR_BUFORA;
 
-        //#pragma omp atomic
+        #pragma omp atomic
         licznik = licznik - 1;
 
         printf("%d\n",v);
