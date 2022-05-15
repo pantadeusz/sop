@@ -31,7 +31,9 @@ unsigned char page_table_reserved[8] = {0,0,0,0,0,0,0,0}; // 64 = 1000000b
 /// struktura adresu: ssssoooo - adres logiczny, gdzie polowa to segment, polowa to offset
 
 unsigned char get_memory(unsigned char logical_address) {
-    return physical_memory[(page_table[logical_address >> 4] << 4) + (logical_address & 0x0f)];
+    return physical_memory[
+        (page_table[logical_address >> 4] << 4) + (logical_address & 0x0f)
+        ];
 }
 void set_memory(unsigned char logical_address, unsigned char value) {
     physical_memory[(page_table[logical_address >> 4] << 4) + (logical_address & 0x0f)] = value;
@@ -100,7 +102,7 @@ void dump_all() {
 
 int main (int argc, char *argv[]) {
 
-    unsigned char test_text[] = "testowy tekst do sprawdzenia czy ladnie dziala.";
+    unsigned char test_text[] = "testowy tekst do sprawdzenia czy ladnie dziala. asdlkfj asl; asdjdf j;lasdads fljk";
 
     dump_all();
 
@@ -108,10 +110,15 @@ int main (int argc, char *argv[]) {
 
     printf("addr: 0x0%x\n", myaddr0);
 
+    dump_all();
+
     for (int i = 0; i < strlen(test_text); i++) set_memory(myaddr0 + i,test_text[i]);
 
     dump_all();
 
+    printf("TEKST:\n");
+    for (int i = 0; i < strlen(test_text); i++) printf("%c",get_memory(myaddr0 + i));
+    printf("\n");
 
     return 0;
 }

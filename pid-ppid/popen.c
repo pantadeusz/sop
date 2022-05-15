@@ -6,13 +6,13 @@ int main( int argc, char *argv[] )
 {
     FILE *f;
     char buf[1024];
-    f = popen("echo witaj", "r");
+    f = popen("bitcoin-cli -testnet getwalletinfo", "r");
     if (f == NULL) {
         return -1;
     }
 
     while (fread(buf, 1, 1024, f) > 0) {
-        printf("%s", buf);
+        printf("====%s===", buf);
     }
 
     pclose(f);

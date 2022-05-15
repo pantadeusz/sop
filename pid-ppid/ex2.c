@@ -3,6 +3,8 @@
 #include <unistd.h>
 
 int main() {
+	printf("(START) PID: %d\n",  getpid());
+	printf("(START) PPID: %d\n", getppid());
 	int r = fork();
 	if (r == 0) {
 		printf("(%d) PID: %d\n",  r, getpid());
