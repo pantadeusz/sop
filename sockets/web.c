@@ -19,7 +19,7 @@
 int main() {
   signal(SIGPIPE, SIG_IGN);
   int sockfd;
-  unsigned int port = 8080;
+  unsigned int port = 8081;
   int yes = 1;
   struct sockaddr_in my_addr;
   if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
@@ -28,10 +28,10 @@ int main() {
   }
 
   // opcja
-  /*    if (setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int)) == -1) {
-          perror("setsockopt");
-          exit(1);
-      } */
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+    perror("setsockopt");
+    exit(1);
+  }
 
   my_addr.sin_family = AF_INET;
   my_addr.sin_port = htons(port);
@@ -75,7 +75,7 @@ int main() {
       char queryString[1024];
       char proto[1024];
       sscanf(in, "%s %s %s", method, queryString, proto);
-      char responseData[1024] = "Siemano\n";
+      char responseData[1024] = "Jakiś inny tekst\n";
       int responseSize = strlen(responseData);
       sprintf(
           sent,

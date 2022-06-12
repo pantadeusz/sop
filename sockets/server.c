@@ -44,21 +44,27 @@ int main() {
     perror("listen");
     exit(1);
   }
-  struct sockaddr_in remoteAddr;
-  socklen_t sin_size = sizeof(struct sockaddr_in);
-  if ((s = accept(lsocket, (struct sockaddr *)&remoteAddr, &sin_size)) == -1) {
-    perror("on error");
-    return -1;
+  while (1) {
+    struct sockaddr_in remoteAddr;
+    socklen_t sin_size = sizeof(struct sockaddr_in);
+    if ((s = accept(lsocket, (struct sockaddr *)&remoteAddr, &sin_size)) ==
+        -1) {
+      perror("on error");
+      return -1;
+    }
+    unsigned char *addr = (char *)&(remoteAddr.sin_addr.s_addr);
+    printf("otrzymalem polaczenie z %d.%d.%d.%d\n", addr[0], addr[1], addr[2],
+           addr[3]);
+    {
+      int x, y;
+      read(s, &x, sizeof(x));
+      read(s, &y, sizeof(y));
+      int z = x + y;
+      write(s, &z, sizeof(z));
+      printf("licze %d %d = %d\n", x, y, z);
+    }
+    close(s);
   }
-  unsigned char *addr = (char *)&(remoteAddr.sin_addr.s_addr);
-  printf("otrzymalem polaczenie z %d.%d.%d.%d\n", addr[0], addr[1], addr[2],
-         addr[3]);
-  {
-    char buf[128];
-    strcpy(buf, "Witaj :D");
-    write(s, buf, 128);
-  }
-  close(s);
   close(lsocket);
   return 0;
 }

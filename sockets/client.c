@@ -46,9 +46,19 @@ int main(int argc, char *argv[]) {
 
   freeaddrinfo(result);
   {
-    char buf[128];
-    read(sfd, buf, 128);
-    printf("Otrzymalem:\n%s\n", buf);
+    int x, y;
+
+    x = 10;
+    y = 20;
+    if (argc == 3) {
+      x = strtod(argv[1], NULL);
+      y = strtod(argv[2], NULL);
+    }
+    write(sfd, &x, sizeof(x));
+    write(sfd, &y, sizeof(y)); 
+    int r;   
+    int rsize = read(sfd, &r, sizeof(r));
+    printf("Otrzymalem(%d):\n%d+%d = %d\n", rsize, x, y, r);
   }
   close(sfd);
   exit(EXIT_SUCCESS);
