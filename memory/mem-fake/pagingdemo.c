@@ -28,7 +28,7 @@ unsigned char page_table_size = 0;
 unsigned char page_table[8] = {0,0,0,0,0,0,0,0}; // 64 = 1000000b
 unsigned char page_table_reserved[8] = {0,0,0,0,0,0,0,0}; // 64 = 1000000b
 
-/// struktura adresu: ssssoooo - adres logiczny, gdzie polowa to segment, polowa to offset
+/// struktura adresu: ssssoooo - adres logiczny
 
 unsigned char get_memory(unsigned char logical_address) {
     return physical_memory[
